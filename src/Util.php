@@ -311,7 +311,8 @@ class Util {
         $dir = new TemporaryDirectory($this->driver->getConfiguration()->get('temporary_directory') ?: '');
         $fs = $dir->create();
 
-        $suffix = pathinfo($video, PATHINFO_EXTENSION);
+        $sourceSuffix = pathinfo($video, PATHINFO_EXTENSION);
+        $targetSuffix = pathinfo($outPath, PATHINFO_EXTENSION);
 
         $codecs = [
             'h264' => 'libx264',
@@ -343,7 +344,7 @@ class Util {
         }
 
         $firstVideo = $video;
-        $imgVideo = $fs->path('tmp.'.$suffix);
+        $imgVideo = $fs->path('tmp.'.$sourceSuffix);
 
         $commands = [
             '-y',
@@ -356,8 +357,10 @@ class Util {
         ];
         $ret = $this->driver->command($commands);
 
-        $this->concatVideosSameCodec([$firstVideo, $imgVideo], 'same_'.$outPath);
-        $this->concatVideosSameButCodec([$firstVideo, $imgVideo], 'diff_'.$outPath);
-        return;
+        if ($sourceSuffix == $targetSuffix) {
+            return $this->concatVideosSameCodec([$firstVideo, $imgVideo], $outPath);
+        } else {
+            return $this->concatVideosSameButCodec([$firstVideo, $imgVideo], $outPath);
+        }
     }
 }
