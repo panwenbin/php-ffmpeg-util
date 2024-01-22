@@ -134,7 +134,7 @@ class Util {
      * @return bool
      * @throws \Exception
      */
-    public function imagesToVideo(array $images, string $outPath, string $t, string $fps = '25')
+    public function imagesToVideo(array $images, string $outPath, string $t, string $fps = '25', $codec = 'libx264', $pixFmt = 'yuv420p')
     {
         $dir = new TemporaryDirectory($this->driver->getConfiguration()->get('temporary_directory') ?: '');
         $fs = $dir->create();
@@ -153,8 +153,8 @@ class Util {
             '-framerate', count($images)."/${t}",
             '-i', $fs->path('%00d.'.$ext),
             '-r', $fps,
-            '-c:v', 'libx264',
-            '-pix_fmt', 'yuv420p',
+            '-c:v', $codec,
+            '-pix_fmt', $pixFmt,
             $outPath,
         ];
 
