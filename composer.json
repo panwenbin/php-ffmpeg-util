@@ -1,0 +1,20 @@
+{
+    "name": "panwenbin/php-ffmpeg-util",
+    "description": "ffmpeg util for common usage",
+    "type": "library",
+    "require": {
+        "php-ffmpeg/php-ffmpeg": "^1.2"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Panwenbin\\PhpFFMpegUtil\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "panwenbin",
+            "email": "panwenbin@gmail.com"
+        }
+    ]
+}
