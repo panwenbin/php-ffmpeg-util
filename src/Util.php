@@ -326,6 +326,7 @@ class Util {
         $frameRate = "";
         $channelLayout = "";
         $sampleRate = "";
+        $pixFmt = "";
         foreach($streams as $stream) {
             /** @var \FFMpeg\FFProbe\DataMapping\Stream $stream */
             if ($stream->isVideo()) {
@@ -333,6 +334,7 @@ class Util {
                 $firstSize = $firstSize ?: $stream->get('width').'x'.$stream->get('height');
                 $sar = $sar ?: str_replace(':','/',$stream->get('sample_aspect_ratio'));
                 $frameRate = $frameRate ?: $stream->get('r_frame_rate');
+                $pixFmt = $pixFmt ?: $stream->get('pix_fmt');
             }
             if ($stream->isAudio()) {
                 $channelLayout = $channelLayout ?: $stream->get('channel_layout');
@@ -347,7 +349,7 @@ class Util {
             '-y',
             '-loop', 1, '-t', $t, '-i', $image,
             '-codec', $codecs[$firstCodecName],
-            '-pix_fmt', 'yuv420p',
+            '-pix_fmt', $pixFmt,
             '-r', $frameRate,
             '-vf', 'scale='.$firstSize.',setsar='.$sar,
             $imgVideo,
