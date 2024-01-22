@@ -358,9 +358,14 @@ class Util {
         $ret = $this->driver->command($commands);
 
         if ($sourceSuffix == $targetSuffix) {
-            return $this->concatVideosSameCodec([$firstVideo, $imgVideo], $outPath);
+            $ret = $this->concatVideosSameCodec([$firstVideo, $imgVideo], $outPath);
         } else {
-            return $this->concatVideosSameButCodec([$firstVideo, $imgVideo], $outPath);
+            $ret = $this->concatVideosSameButCodec([$firstVideo, $imgVideo], $outPath);
         }
+
+        unlink($imgVideo);
+        rmdir($fs->path());
+
+        return $ret;
     }
 }
