@@ -3,7 +3,7 @@
     "description": "ffmpeg util for common usage",
     "type": "library",
     "require": {
-        "php-ffmpeg/php-ffmpeg": "^1.2"
+        "php-ffmpeg/php-ffmpeg": "^1.0"
     },
     "license": "MIT",
     "autoload": {
