@@ -350,6 +350,7 @@ class Util {
 
         $codecs = [
             'h264' => 'libx264',
+            'hevc' => 'libx265',
             'flv1' => 'flv',
         ];
 
