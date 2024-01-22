@@ -348,12 +348,6 @@ class Util {
         $sourceSuffix = pathinfo($video, PATHINFO_EXTENSION);
         $targetSuffix = pathinfo($outPath, PATHINFO_EXTENSION);
 
-        $codecs = [
-            'h264' => 'libx264',
-            'hevc' => 'libx265',
-            'flv1' => 'flv',
-        ];
-
         $probe = FFProbe::create();
         $streams = $probe->streams($video);
         $firstCodecName = "";
@@ -381,7 +375,7 @@ class Util {
         $firstVideo = $video;
         $imgVideo = $fs->path('tmp.'.$sourceSuffix);
 
-        $this->loopImagesToVideo([$image], $imgVideo, $t, $firstSize, $sar, $codecs[$firstCodecName], $pixFmt, $frameRate);
+        $this->loopImagesToVideo([$image], $imgVideo, $t, $firstSize, $sar, $firstCodecName, $pixFmt, $frameRate);
 
         if ($sourceSuffix == $targetSuffix) {
             $ret = $this->concatVideosSameCodec([$firstVideo, $imgVideo], $outPath);
