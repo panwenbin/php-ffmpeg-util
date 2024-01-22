@@ -203,6 +203,40 @@ class Util {
     }
 
     /**
+     * 图片循环合成视频
+     * @param array $images 图片路径数组
+     * @param string $outPath 输出视频路径
+     * @param float $t 视频时长
+     * @param string $size 视频尺寸
+     * @param string $sar 视频比例
+     * @param string $codec 视频编码
+     * @param string $pixFmt 视频像素格式
+     * @param string $frameRate 视频帧率
+     * @return bool
+     * @throws \Exception
+     */
+    public function loopImagesToVideo(array $images, string $outPath, float $t, string $size = '1920x1080', string $sar = '1/1', string $codec = 'libx264', string $pixFmt = 'yuv420p', string $frameRate = '25')
+    {
+        $commands = [
+            '-y',
+        ];
+        $perT = round($t/count($images), 2);
+        foreach($images as $image) {
+            $commands = array_merge($commands, [
+                '-loop', 1, '-t', $perT, '-i', $image,
+            ]);
+        }
+        $commands = array_merge($commands, [
+            '-codec', $codec,
+            '-pix_fmt', $pixFmt,
+            '-r', $frameRate,
+            '-vf', 'scale='.$size.',setsar='.$sar,
+            $outPath,
+        ]);
+        $ret = $this->driver->command($commands);
+    }
+
+    /**
      * 视频合成视频 相同编码
      * @param array $videos 视频路径数组
      * @param string $outPath 输出视频路径
@@ -346,16 +380,7 @@ class Util {
         $firstVideo = $video;
         $imgVideo = $fs->path('tmp.'.$sourceSuffix);
 
-        $commands = [
-            '-y',
-            '-loop', 1, '-t', $t, '-i', $image,
-            '-codec', $codecs[$firstCodecName],
-            '-pix_fmt', $pixFmt,
-            '-r', $frameRate,
-            '-vf', 'scale='.$firstSize.',setsar='.$sar,
-            $imgVideo,
-        ];
-        $ret = $this->driver->command($commands);
+        $this->loopImagesToVideo([$image], $imgVideo, $t, $firstSize, $sar, $codecs[$firstCodecName], $pixFmt, $frameRate);
 
         if ($sourceSuffix == $targetSuffix) {
             $ret = $this->concatVideosSameCodec([$firstVideo, $imgVideo], $outPath);
