@@ -156,8 +156,15 @@ class Util {
             '-r', $fps,
             '-c:v', $codec,
             '-pix_fmt', $pixFmt,
-            $outPath,
         ];
+        if (pathinfo($outPath, PATHINFO_EXTENSION) == 'mp4') {
+            $commands = array_merge($commands, [
+                '-movflags', 'faststart',
+            ]);
+        }
+        $commands = array_merge($commands, [
+            $outPath,
+        ]);
 
         $ret = $this->driver->command($commands);
 
@@ -192,8 +199,15 @@ class Util {
             '-safe', '0',
             '-i', $filelist,
             '-r', $fps,
-            $outPath,
         ];
+        if (pathinfo($outPath, PATHINFO_EXTENSION) == 'mp4') {
+            $commands = array_merge($commands, [
+                '-movflags', 'faststart',
+            ]);
+        }
+        $commands = array_merge($commands, [
+            $outPath,
+        ]);
 
         $ret = $this->driver->command($commands);
 
@@ -232,6 +246,13 @@ class Util {
             '-pix_fmt', $pixFmt,
             '-r', $frameRate,
             '-vf', 'scale='.$size.',setsar='.$sar,
+        ]);
+        if (pathinfo($outPath, PATHINFO_EXTENSION) == 'mp4') {
+            $commands = array_merge($commands, [
+                '-movflags', 'faststart',
+            ]);
+        }
+        $commands = array_merge($commands, [
             $outPath,
         ]);
         $ret = $this->driver->command($commands);
