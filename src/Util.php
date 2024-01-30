@@ -152,6 +152,7 @@ class Util {
             '-y',
             '-framerate', count($images)."/${t}",
             '-i', $fs->path('%00d.'.$ext),
+            '-vf', 'pad=ceil(iw/2)*2:ceil(ih/2)*2',
             '-r', $fps,
             '-c:v', $codec,
             '-pix_fmt', $pixFmt,
