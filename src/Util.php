@@ -235,17 +235,20 @@ class Util {
         $commands = [
             '-y',
         ];
+        $scales = [];
+        $filters = [];
         $perT = round($t/count($images), 2);
-        foreach($images as $image) {
+        foreach($images as $i => $image) {
             $commands = array_merge($commands, [
                 '-loop', 1, '-t', $perT, '-i', $image,
             ]);
+            $scales[] = "[${i}:v] scale=".$size.",setsar=".$sar." [${i}v]";
+            $filters[] = "[${i}v]";
         }
         $commands = array_merge($commands, [
             '-codec', $codec,
             '-pix_fmt', $pixFmt,
             '-r', $frameRate,
-            '-vf', 'scale='.$size.',setsar='.$sar,
         ]);
         if (pathinfo($outPath, PATHINFO_EXTENSION) == 'mp4') {
             $commands = array_merge($commands, [
@@ -253,6 +256,8 @@ class Util {
             ]);
         }
         $commands = array_merge($commands, [
+            '-filter_complex', implode(';', $scales).';'.implode('', $filters).' concat=n='.count($images).':v=1:a=0 [v]',
+            '-map', '[v]',
             $outPath,
         ]);
         $ret = $this->driver->command($commands);
